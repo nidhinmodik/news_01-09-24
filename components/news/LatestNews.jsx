@@ -1,16 +1,18 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
+'use client';
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import SimpleNewsCard from './items/SimpleNewsCard';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { base_api_url } from '@/config/config';
 
+// Dynamically import Carousel with SSR disabled
+const Carousel = dynamic(() => import('react-multi-carousel'), { ssr: false });
+import 'react-multi-carousel/lib/styles.css';
+
 const LatestNews = () => {
+    const [news, setNews] = useState([]);
 
-    const [news, setNews] = useState([])
     const responsive = {
-
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 3000 },
             items: 1
@@ -31,33 +33,39 @@ const LatestNews = () => {
 
     const latest_news_get = async () => {
         try {
-            const res = await fetch(`${base_api_url}/api/latest/news`)
-            const data = await res.json()
-            setNews(data.news)
+            const res = await fetch(`${base_api_url}/api/latest/news`);
+            if (!res.ok) {
+                throw new Error(`Failed to fetch: ${res.statusText}`);
+            }
+            const data = await res.json();
+            setNews(data.news);
         } catch (error) {
-            console.log(error)
+            console.log('Error fetching latest news:', error);
         }
-    }
+    };
 
     useEffect(() => {
-        latest_news_get()
-    }, [])
+        latest_news_get();
+    }, []);
 
     const ButtonGroup = ({ next, previous }) => {
-        return <div className='flex justify-between items-center'>
-            <div className='text-xl font-bold text-[#333333] relative before:absolute before:w-[4px] before:bg-[#c80000] before:h-full before:-left-0 pl-3'>
-                Latest news
+        return (
+            <div className='flex justify-between items-center'>
+                <div className='text-xl font-bold text-[#333333] relative before:absolute before:w-[4px] before:bg-[#c80000] before:h-full before:-left-0 pl-3'>
+                    Latest news
+                </div>
+                <div className='flex justify-center items-center gap-x-3'>
+                    <button onClick={() => previous()} className='w-[30px] h-[30px] flex justify-center items-center bg-white border-slate-200'>
+                        <span><FiChevronLeft /></span>
+                    </button>
+                    <button onClick={() => next()} className='w-[30px] h-[30px] flex justify-center items-center bg-white border-slate-200'>
+                        <span><FiChevronRight /></span>
+                    </button>
+                </div>
             </div>
-            <div className='flex justify-center items-center gap-x-3'>
-                <button onClick={() => previous()} className='w-[30px] h-[30px] flex justify-center items-center bg-white border-slate-200' >
-                    <span><FiChevronLeft /></span>
-                </button>
-                <button onClick={() => next()} className='w-[30px] h-[30px] flex justify-center items-center bg-white border-slate-200' >
-                    <span><FiChevronRight /></span>
-                </button>
-            </div>
-        </div>
-    }
+        );
+    };
+
     return (
         <div className='w-full flex flex-col-reverse gap-3 pr-0 lg:pr-2'>
             <Carousel
@@ -74,7 +82,7 @@ const LatestNews = () => {
                 }
             </Carousel>
         </div>
-    )
-}
+    );
+};
 
-export default LatestNews
+export default LatestNews;
