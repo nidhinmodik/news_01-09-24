@@ -1,19 +1,10 @@
-// const production = 'production'
-// const local = 'dev'
+const mode = process.env.NEXT_PUBLIC_MODE;
+let base_api_url = '';
 
-const mode = process.env.MODE
-
-const local_api_url = process.env.API_URL
-const production_api_url = 'http://localhost:5000'
-
-
-
-let base_api_url = ''
-
-if (mode === production) {
-    base_api_url = production_api_url
+if (mode === 'production') {
+    base_api_url = process.env.NEXT_PUBLIC_PRODUCTION_API_URL;
 } else {
-    base_api_url = local_api_url
+    base_api_url = process.env.NEXT_PUBLIC_LOCAL_API_URL;
 }
 
-export { base_api_url }
+export { base_api_url };
