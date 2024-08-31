@@ -2,14 +2,18 @@ import React from 'react'
 import Breadcrumb from "@/components/Breadcrumb";
 import Category from "@/components/Category";
 import Search from "@/components/Search";
+import dynamic from 'next/dynamic';
 import PopularNews from "@/components/news/PopularNews";
 import RecentNews from "@/components/news/RecentNews";
-import SimpleDetailsNewCard from "@/components/news/items/SimpleDetailsNewCard";
 import Footer from "@/components/Footer";
-import SearchNews from '@/components/news/SearchNews';
 
-const page = () => {
+// Dynamically import SearchNews to ensure it's client-side only
+const SearchNews = dynamic(() => import('@/components/news/SearchNews'), {
+    ssr: false, // Ensure this is not server-side rendered
+    loading: () => <p>Loading...</p>, // Optional: add a loading state
+});
 
+const Page = () => {
     return (
         <div>
             <div className="bg-white shadow-sm py-4">
@@ -29,7 +33,6 @@ const page = () => {
                             <div className="w-full pl-0 xl:pl-4">
                                 <div className="flex flex-col gap-y-8">
                                     <Search />
-
                                     <RecentNews />
                                     <div className="p-4 bg-white">
                                         <Category titleStyle={"text-gray-700 font-bold"} />
@@ -48,4 +51,4 @@ const page = () => {
     );
 }
 
-export default page
+export default Page;
