@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { EmblaCarouselReact } from 'embla-carousel-react';
+import useEmblaCarousel from 'embla-carousel-react';
 import SimpleNewsCard from './items/SimpleNewsCard';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { base_api_url } from '@/config/config';
@@ -10,7 +10,7 @@ const LatestNews = () => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [emblaRef, emblaApi] = EmblaCarouselReact({
+    const [emblaRef, emblaApi] = useEmblaCarousel({
         loop: true,
         skipSnaps: false
     });
